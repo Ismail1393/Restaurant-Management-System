@@ -1,3 +1,5 @@
+USE dbmsproject;
+
 CREATE TABLE users (
     userID INT AUTO_INCREMENT,
     fname VARCHAR(255),
@@ -15,29 +17,43 @@ CREATE TABLE Menu (
     ItemDescription VARCHAR(255),
     ItemPrice DECIMAL(10,2),
     Available BOOLEAN,
-    PRIMARY KEY (MenuID)
+    PRIMARY KEY (ItemID )
 );
 
 CREATE TABLE Orders (
     OrderID INT AUTO_INCREMENT,
     OrderDate DATE,
     TotalPrice DECIMAL(10,2),
+    EmployeeID INT,
+    Quantity INT,
     PRIMARY KEY (OrderID),
+    FOREIGN KEY (EmployeeID) REFERENCES users(userID)
 );
 
 CREATE TABLE Reservations (
     ReservationID INT AUTO_INCREMENT,
     Available BOOLEAN,
-    PRIMARY KEY (ReservationID),
+    PRIMARY KEY (ReservationID)
 );
 
 CREATE TABLE Inventory (
     InventoryID INT AUTO_INCREMENT,
     ItemName VARCHAR(255),
     Quantity INT,
-    PRIMARY KEY (InventoryID)
-    FOREIGN KEY (ItemName) REFERENCES Menu(ItemName)
+    PRIMARY KEY (InventoryID),
+    FOREIGN KEY (InventoryID) REFERENCES Menu(ItemID)
 );
+
+CREATE TABLE Payments (
+    PaymentID INT AUTO_INCREMENT,
+    PaymentDate DATE,
+    PaymentAmount DECIMAL(10,2),
+    OrderID INT,
+    PRIMARY KEY (PaymentID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+-- Inserting data into the tables
 
 INSERT INTO users (fname, lname, email, password, wage, permission_level)
 VALUES
@@ -76,3 +92,9 @@ VALUES
 ('Chicken Salad', 100),
 ('Ice Cream', 50);
 
+INSERT INTO Payments (PaymentDate, PaymentAmount, OrderID)
+VALUES
+('2023-04-01', 45.97, 1),
+('2023-04-02', 19.98, 2),
+('2023-04-03', 34.95, 3),
+('2023-04-04', 24.96, 4);
