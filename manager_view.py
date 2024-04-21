@@ -204,12 +204,16 @@ def check_performance():
                 elif action == "view_sales":
                     os.system("cls")
                     cursor = conn.cursor()
-                    query = "SELECT EmployeeID, SUM(TotalPrice) FROM Orders GROUP BY EmployeeID;"
+                    query = "SELECT u.fname , u.lname, o.EmployeeID, SUM(o.TotalPrice) FROM Orders o INNER JOIN Users u ON o.EmployeeID = u.userID GROUP BY o.EmployeeID;"
                     cursor.execute(query)
                     result = cursor.fetchall()
                     if result:
                         for employee in result:
-                            print(f"Employee ID: {employee[0]} - Total sales: ${employee[1]:.2f}")
+                            print(f"Employee ID: {employee[0]}")
+                            print(f"First Name: {employee[1]}")
+                            print(f"Last Name: {employee[2]}")
+                            print(f"Total sales: ${employee[3]:.2f}")
+                            print("------------------------------------------")
                     else:
                         print("No sales recorded.")
                         
@@ -218,11 +222,13 @@ def check_performance():
                     cursor = conn.cursor()
                     employee_id = inquirer.text(message="Enter Employee ID:").execute()
 
-                    query = "SELECT SUM(TotalPrice) FROM Orders WHERE EmployeeID = %s;"
+                    query = "SELECT u.fname, u.lname, SUM(o.TotalPrice) FROM Orders o INNER JOIN Users u ON o.EmployeeID = u.userID WHERE o.EmployeeID = %s;"
                     cursor.execute(query, (employee_id,))
                     result = cursor.fetchone()
                     if result[0] is not None:
-                        print(f"Total sales for today: ${result[0]:.2f} for Employee ID: {employee_id}")
+                        print(f"First Name: {result[0]}")
+                        print(f"Last Name: {result[1]}")
+                        print(f"Total sales for today: ${result[2]} ")
                     else:
                         print(f"No sales recorded for {employee_id}.")
 
