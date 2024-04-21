@@ -41,7 +41,7 @@ CREATE TABLE Inventory (
 INSERT INTO users (fname, lname, email, password, wage, permission_level)
 VALUES
 ('John', 'Doe', 'johndoe@example.com', 'password123', 25000.00, 2),
-('Jane', 'Smith', 'janesmith@example.com', 'password123', 30000.00, 3),
+('Jane', 'Smith', 'janesmith@example.com', 'password123', 30000.00, 0),
 ('Alice', 'Johnson', 'alicejohnson@example.com', 'password123', 35000.00, 1),
 ('Bob', 'Brown', 'bobbrown@example.com', 'password123', 28000.00, 2);
 
