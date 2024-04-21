@@ -105,7 +105,7 @@ def view_menu():
     else:
         print("Failed to connect to the database.")
 
-def insert_order():
+'''def insert_order():
     # Display menu to employee
     view_menu()
 
@@ -148,7 +148,53 @@ def insert_order():
 
     else:
         print("Failed to connect to the database.")
+'''
 
+
+def insert_order(employee_id):
+    # Display menu to employee
+    view_menu()
+
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+
+            # Get input for order items
+            order_items = []
+            while True:
+                item_id = input("Enter item ID to add to order (or 'done' to finish): ")
+                if item_id.lower() == 'done':
+                    break
+                else:
+                    # Validate item ID and fetch item price
+                    query = "SELECT ItemPrice FROM Menu WHERE ItemID = %s;"
+                    cursor.execute(query, (item_id,))
+                    result = cursor.fetchone()
+                    if result:
+                        order_items.append(result[0])
+                    else:
+                        print("Invalid item ID. Please try again.")
+
+            # Calculate total price based on the prices of items fetched from the menu table
+            total_price = sum(order_items)
+
+            # Insert order into Orders table with EmployeeID
+            insert_query = "INSERT INTO Orders (OrderDate, TotalPrice, EmployeeID, Quantity) VALUES (CURDATE(), %s, %s, %s);"
+            cursor.execute(insert_query, (total_price, employee_id, len(order_items)))
+            conn.commit()
+
+            print("Order inserted successfully.")
+
+        except errors.ProgrammingError as e:
+            print(f"Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+
+    else:
+        print("Failed to connect to the database.")
+        
 if __name__ == "__main__":
     employee_view()
 

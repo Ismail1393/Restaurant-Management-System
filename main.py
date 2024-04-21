@@ -26,39 +26,54 @@ def main():
                         query = "SELECT permission_level FROM users WHERE email = %s;"
                         cursor.execute(query, (user,))
                         permission = cursor.fetchone()
-                        if permission:
-                            if permission[0] == 2:  # Employee
-                                print("Welcome Employee")
-                                while True:
-                                    clear_screen()
-                                    action = inquirer.select(
-                                        message="Select an action:",
-                                        choices=[
-                                            {"name": "View Reservations", "value": "view_reservations"},
-                                            {"name": "View Orders", "value": "view_orders"},
-                                            {"name": "View Menu", "value": "view_menu"},
-                                            {"name": "Insert New Order", "value": "insert_order"},
-                                            {"name": "Exit", "value": "exit"},
-                                        ],
-                                        default="View Reservations"
-                                    ).execute()
+                        if permission[0] == 2:  # Employee
+                            print("Welcome Employee")
+                            while True:
+                                clear_screen()
+                                action = inquirer.select(
+                                    message="Select an action:",
+                                    choices=[
+                                        {"name": "View Reservations", "value": "view_reservations"},
+                                        {"name": "View Orders", "value": "view_orders"},
+                                        {"name": "View Menu", "value": "view_menu"},
+                                        {"name": "Insert New Order", "value": "insert_order"},
+                                        {"name": "Exit", "value": "exit"},
+                                    ],
+                                    default="View Reservations"
+                                ).execute()
 
-                                    if action == "view_reservations":
-                                        clear_screen()
-                                        check_reservations()
-                                    elif action == "view_orders":
-                                        clear_screen()
-                                        view_orders()
-                                    elif action == "view_menu":
-                                        clear_screen()
-                                        view_menu()
-                                    elif action == "insert_order":
-                                        clear_screen()
-                                        insert_order()
-                                    elif action == "exit":
-                                        break
+                                if action == "view_reservations":
+                                    clear_screen()
+                                    check_reservations()
+                                    input("Press enter to continue")
+                                elif action == "view_orders":
+                                    clear_screen()
+                                    view_orders()
+                                    input("Press enter to continue")
+                                elif action == "view_menu":
+                                    clear_screen()
+                                    view_menu()
+                                    input("Press enter to continue")
+                                elif action == "insert_order":
+                                    clear_screen()
+                                    # Pass the user's email to get their userID
+                                    conn = create_connection()
+                                    if conn is not None:
+                                        try:
+                                            cursor = conn.cursor()
+                                            query = "SELECT userID FROM users WHERE email = %s;"
+                                            cursor.execute(query, (user,))
+                                            employee_id = cursor.fetchone()[0]
+                                            insert_order(employee_id)
+                                        except errors.ProgrammingError as e:
+                                            print(f"Error: {e}")
+                                        finally:
+                                            cursor.close()
+                                            conn.close()
+                                elif action == "exit":
+                                    break
                             
-                            elif permission[0] == 1:  # Manager
+                        elif permission[0] == 1:  # Manager
                                 while True:
                                     clear_screen()
                                     print("Welcome Manager")
