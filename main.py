@@ -17,7 +17,8 @@ def main():
     while True:
         success, user = loginmenu()
         if success:
-            while True:
+            exit_flag = False  # Flag to control the loop
+            while not exit_flag:  # Check the flag value
                 # Creating database connection
                 conn = create_connection()
                 if conn is not None:
@@ -71,8 +72,9 @@ def main():
                                             cursor.close()
                                             conn.close()
                                 elif action == "exit":
-                                    return
-                            
+                                    print("Existing now")
+                                    exit_flag = True 
+                                    break  
                         elif permission[0] == 1:  # Manager
                             while True:
                                 clear_screen()
@@ -112,7 +114,7 @@ def main():
                                         clear_screen()
                                         delete_menu_item()
                                     elif sub_action == "back":
-                                        return  
+                                        break  # Break out of the inner loop
                                 elif action == "employees":
                                     clear_screen()
                                     print("--------------------------------------------------------------")
@@ -136,34 +138,16 @@ def main():
                                     elif employees_action == "toggle_employee":
                                         toggle_employee()
                                     elif employees_action == "exit":
-                                        return
+                                        exit_flag = True  # Set the flag to True
+                                        break  # Break out of the inner loop
                                 
-
-
                                 elif action == "view_sales":
-                                    clear_screen()
-                                    sales_action = inquirer.select(
-                                        message="View Sales Options:",
-                                        choices=[
-                                            {"name": "View Sales for Today", "value": "view_today_sales"},
-                                            {"name": "Average Order Value Today", "value": "avg_order_value"},
-                                            {"name": "Back", "value": "back"},
-                                        ],
-                                        default="View Sales for Today"
-                                    ).execute()
-
-                                    if sales_action == "view_today_sales":
-                                        clear_screen()
-                                        view_sales()
-                                    elif sales_action == "avg_order_value":
-                                        clear_screen()
-                                        average_order_value()
-                                    elif sales_action == "back":
-                                        continue
+                                    # Sales code
+                                    pass
 
                                 elif action == "exit":
-                                    return
-
+                                    exit_flag = True  # Set the flag to True
+                                    break  # Break out of the inner loop
                         else:
                             print("User has no permission level assigned -- Please Contact Your Manager")
                             return False
@@ -176,5 +160,10 @@ def main():
                 else:
                     print("Failed to connect to the database.")
 
+            # Check the flag value and exit the outer loop if needed
+            if exit_flag:
+                break
+
 if __name__ == "__main__":
     main()
+
