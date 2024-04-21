@@ -78,7 +78,6 @@ def view_orders():
     else:
         print("Failed to connect to the database.")
 
-
 def view_menu():
     conn = create_connection()
     if conn is not None:
@@ -149,8 +148,6 @@ def view_menu():
     else:
         print("Failed to connect to the database.")
 '''
-
-
 def insert_order(employee_id):
     # Display menu to employee
     view_menu()

@@ -1,5 +1,3 @@
-# manager_view.py
-
 import os
 from InquirerPy import inquirer
 from dbconnect import create_connection
@@ -240,7 +238,6 @@ def check_performance():
         else:
             print("Failed to connect to the database.")
         
-
 def toggle_employee():
     os.system("cls")
     while True:
@@ -308,8 +305,6 @@ def toggle_employee():
         else:
             print("Failed to connect to the database.")
     
-        
-
 def view_inventory():
     conn = create_connection()
     if conn is not None:
@@ -334,3 +329,38 @@ def view_inventory():
 def order_more():
     # Placeholder function for future implementation
     print("Order More Items Functionality will be added here.")
+
+def add_new_item():
+    os.system("cls")
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            item_name = inquirer.text(message="Enter Item Name:").execute()
+            quantity = inquirer.text(message="Enter Quantity:").execute()
+            
+            insert_query = "INSERT INTO Inventory (ItemName, Quantity) VALUES (%s, %s);"
+            cursor.execute(insert_query, (item_name, quantity))
+            conn.commit()
+
+            print("New item added successfully.")
+
+            add_to_menu = inquirer.confirm(message="Add this item to the menu?", default=True).execute()
+
+            if add_to_menu:
+                item_description = inquirer.text(message="Enter Item Description:").execute()
+                item_price = inquirer.text(message="Enter Item Price:").execute()
+                available = inquirer.confirm(message="Is the item available?", default=True).execute()
+
+                insert_query = "INSERT INTO Menu (ItemName, ItemDescription, ItemPrice, Available) VALUES (%s, %s, %s, %s);"
+                cursor.execute(insert_query, (item_name, item_description, item_price, available))
+                conn.commit()
+                print("New menu item added successfully.")
+
+        except errors.ProgrammingError as e:
+            print(f"Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        print("Failed to connect to connect to the database.")

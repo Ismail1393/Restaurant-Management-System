@@ -25,7 +25,6 @@ def loginmenu():
     elif action == "Signup":
         return signup()
         
-
 def login():
     print("--------------------------------------------------------------")
     print('                          \033[4mLogin\033[0m')
