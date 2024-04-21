@@ -36,6 +36,7 @@ CREATE TABLE Inventory (
     ItemName VARCHAR(255),
     Quantity INT,
     PRIMARY KEY (InventoryID)
+    FOREIGN KEY (ItemName) REFERENCES Menu(ItemName)
 );
 
 INSERT INTO users (fname, lname, email, password, wage, permission_level)
@@ -70,8 +71,8 @@ VALUES
 
 INSERT INTO Inventory (ItemName, Quantity)
 VALUES
-('Tomatoes', 150),
-('Flour', 120),
-('Chicken', 100),
+('Cheese Pizza', 150),
+('Veggie Burger', 120),
+('Chicken Salad', 100),
 ('Ice Cream', 50);
 
