@@ -309,3 +309,28 @@ def toggle_employee():
             print("Failed to connect to the database.")
     
         
+
+def view_inventory():
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            query = "SELECT ItemName, Quantity FROM Inventory;"
+            cursor.execute(query)
+            inventory_items = cursor.fetchall()
+            #clear_screen()
+            print("Inventory List:\n")
+            for item in inventory_items:
+                print(f"Item Name: {item[0]}, Quantity: {item[1]}")
+            print("\nEnd of Inventory List")
+        except errors.ProgrammingError as e:
+            print(f"Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        print("Failed to connect to the database.")
+
+def order_more():
+    # Placeholder function for future implementation
+    print("Order More Items Functionality will be added here.")

@@ -3,7 +3,7 @@ import bcrypt
 from login_file import loginmenu
 from dbconnect import create_connection
 from employee_view import check_reservations, view_orders, view_menu, insert_order
-from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value, view_employees, check_performance, toggle_employee  
+from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value, view_employees, check_performance, toggle_employee, view_inventory
 from mysql.connector import errors
 from InquirerPy import inquirer
 from InquirerPy.validator import PasswordValidator
@@ -90,6 +90,7 @@ def main():
                                         {"name": "Employees", "value": "employees"},
                                         {"name": "Edit Menu", "value": "edit_menu"},
                                         {"name": "View Sales", "value": "view_sales"},
+                                        {"name": "Inventory", "value": "inventory"},
                                         {"name": "Exit", "value": "exit"},
                                     ],
                                     default="Edit Menu"
@@ -165,6 +166,27 @@ def main():
                                             average_order_value()
                                         elif sales_action == "back":
                                             break
+
+                                elif action == "inventory":
+                                    clear_screen()
+                                    inventory_action = inquirer.select(
+                                        message="Inventory Options:",
+                                        choices=[
+                                            {"name": "View Total Number of Items", "value": "view_inventory"},
+                                            {"name": "Order More", "value": "order_more"},
+                                            {"name": "Back", "value": "back"},
+                                        ],
+                                        default="View Inventory"
+                                    ).execute()
+
+                                    if inventory_action == "view_inventory":
+                                        clear_screen()
+                                        view_inventory()
+                                    elif inventory_action == "order_more":
+                                        clear_screen()
+                                        #order_more()  # Placeholder for future functionality
+                                    elif inventory_action == "back":
+                                        continue
 
                                 elif action == "exit":
                                     exit_flag = True  # Set the flag to True
