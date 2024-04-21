@@ -145,8 +145,26 @@ def main():
                                         break  # Break out of the inner loop
                                 
                                 elif action == "view_sales":
-                                    # Sales code
-                                    pass
+                                    while True:
+                                        clear_screen()
+                                        sales_action = inquirer.select(
+                                            message="View Sales Options:",
+                                            choices=[
+                                                {"name": "View Sales for Today", "value": "view_today_sales"},
+                                                {"name": "Average Order Value Today", "value": "avg_order_value"},
+                                                {"name": "Back", "value": "back"},
+                                            ],
+                                            default="View Sales for Today"
+                                        ).execute()
+
+                                        if sales_action == "view_today_sales":
+                                            clear_screen()
+                                            view_sales()
+                                        elif sales_action == "avg_order_value":
+                                            clear_screen()
+                                            average_order_value()
+                                        elif sales_action == "back":
+                                            break
 
                                 elif action == "exit":
                                     exit_flag = True  # Set the flag to True
