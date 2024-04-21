@@ -326,9 +326,41 @@ def view_inventory():
     else:
         print("Failed to connect to the database.")
 
+
 def order_more():
-    # Placeholder function for future implementation
-    print("Order More Items Functionality will be added here.")
+    conn = create_connection()
+    if conn is not None:
+        try:
+            cursor = conn.cursor()
+            # Display the current inventory to the manager
+            view_inventory()
+
+Ask for the item name
+            item_name = inquirer.text(
+                message="Enter the name of the item to order more:"
+            ).execute()
+
+            # Ask for the quantity to add
+            additional_quantity = inquirer.text(
+                message="How many more units do you want to add?",
+                validate=lambda text: text.isdigit(),
+                invalid_message="Please enter a valid number."
+            ).execute()
+
+            # Update the inventory
+            update_query = "UPDATE Inventory SET Quantity = Quantity + %s WHERE ItemName = %s;"
+            cursor.execute(update_query, (additional_quantity, item_name))
+            conn.commit()
+            print(f"Inventory updated. Added {additional_quantity} more units to {item_name}.")
+
+        except errors.ProgrammingError as e:
+            print(f"Error: {e}")
+        finally:
+            cursor.close()
+            conn.close()
+    else:
+        print("Failed to connect to the database.")
+
 
 def add_new_item():
     os.system("cls")
