@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 database_name = 'dbmsproject'
 user = 'root'
-password = 'ismail'
+password = 'ismail' 
 
 def create_connection():
     try:

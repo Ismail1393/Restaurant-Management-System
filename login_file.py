@@ -128,6 +128,6 @@ def signup():
     else:
         print("Failed to connect to the database.")
     
-    os.system('cls')
+    # os.system('cls')
     return False, None
     
