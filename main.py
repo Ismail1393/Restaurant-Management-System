@@ -42,37 +42,37 @@ def main():
                                     default="View Reservations"
                                 ).execute()
 
-                            if action == "view_reservations":
-                                clear_screen()
-                                check_reservations()
-                                input("Press enter to continue")
-                            elif action == "view_orders":
-                                clear_screen()
-                                view_orders()
-                                input("Press enter to continue")
-                            elif action == "view_menu":
-                                clear_screen()
-                                view_menu()
-                                input("Press enter to continue")
-                            elif action == "insert_order":
-                                clear_screen()
-                                # Pass the user's email to get their userID
-                                conn = create_connection()
-                                if conn is not None:
-                                    try:
-                                        cursor = conn.cursor()
-                                        query = "SELECT userID FROM users WHERE email = %s;"
-                                        cursor.execute(query, (user,))
-                                        employee_id = cursor.fetchone()[0]
-                                        insert_order(employee_id)
-                                    except errors.ProgrammingError as e:
-                                        print(f"Error: {e}")
-                                    finally:
-                                        cursor.close()
-                                        conn.close()
-                            elif action == "exit":
-                                break
-                        
+                                if action == "view_reservations":
+                                    clear_screen()
+                                    check_reservations()
+                                    input("Press enter to continue")
+                                elif action == "view_orders":
+                                    clear_screen()
+                                    view_orders()
+                                    input("Press enter to continue")
+                                elif action == "view_menu":
+                                    clear_screen()
+                                    view_menu()
+                                    input("Press enter to continue")
+                                elif action == "insert_order":
+                                    clear_screen()
+                                    # Pass the user's email to get their userID
+                                    conn = create_connection()
+                                    if conn is not None:
+                                        try:
+                                            cursor = conn.cursor()
+                                            query = "SELECT userID FROM users WHERE email = %s;"
+                                            cursor.execute(query, (user,))
+                                            employee_id = cursor.fetchone()[0]
+                                            insert_order(employee_id)
+                                        except errors.ProgrammingError as e:
+                                            print(f"Error: {e}")
+                                        finally:
+                                            cursor.close()
+                                            conn.close()
+                                elif action == "exit":
+                                    return
+                            
                         elif permission[0] == 1:  # Manager
                             while True:
                                 clear_screen()

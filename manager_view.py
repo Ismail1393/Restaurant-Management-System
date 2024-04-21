@@ -182,19 +182,50 @@ def view_employees():
             break
 
 def check_performance():
+    os.system("cls")
     while True:
         conn = create_connection()
         if conn is not None:
             try:
-                cursor = conn.cursor()
-                query = "SELECT EmployeeID, SUM(TotalPrice) FROM Orders WHERE OrderDate = CURDATE() GROUP BY EmployeeID;"
-                cursor.execute(query)
-                result = cursor.fetchall()
-                if result:
-                    for employee in result:
-                        print(f"Employee ID: {employee[0]} - Total sales: ${employee[1]:.2f}")
-                else:
-                    print("No sales recorded for today.")
+
+                action = inquirer.select(
+                    message="Select an action:",
+                    choices=[
+                        {"name": "View All Employee Sales", "value": "view_sales"},
+                        {"name": "View employee performance", "value": "employee_performance"},
+                        {"name": "Exit", "value": "exit"},
+                    ],
+                    default="Exit"
+                ).execute()
+
+                if action == "exit":
+                    break
+
+                elif action == "view_sales":
+                    os.system("cls")
+                    cursor = conn.cursor()
+                    query = "SELECT EmployeeID, SUM(TotalPrice) FROM Orders GROUP BY EmployeeID;"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    if result:
+                        for employee in result:
+                            print(f"Employee ID: {employee[0]} - Total sales: ${employee[1]:.2f}")
+                    else:
+                        print("No sales recorded.")
+                        
+                elif action == "employee_performance":
+                    os.system("cls")
+                    cursor = conn.cursor()
+                    employee_id = inquirer.text(message="Enter Employee ID:").execute()
+
+                    query = "SELECT SUM(TotalPrice) FROM Orders WHERE EmployeeID = %s;"
+                    cursor.execute(query, (employee_id,))
+                    result = cursor.fetchone()
+                    if result[0] is not None:
+                        print(f"Total sales for today: ${result[0]:.2f} for Employee ID: {employee_id}")
+                    else:
+                        print(f"No sales recorded for {employee_id}.")
+
             except errors.ProgrammingError as e:
                 print(f"Error: {e}")
             finally:
@@ -203,16 +234,6 @@ def check_performance():
         else:
             print("Failed to connect to the database.")
         
-        action = inquirer.select(
-            message="Select an action:",
-            choices=[
-                {"name": "Exit", "value": "exit"},
-            ],
-            default="Exit"
-        ).execute()
-
-        if action == "exit":
-            break
 
 def toggle_employee():
     os.system("cls")
