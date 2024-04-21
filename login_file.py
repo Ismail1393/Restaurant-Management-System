@@ -5,11 +5,6 @@ from InquirerPy.validator import PasswordValidator
 from dbconnect import create_connection
 from mysql.connector import errors
 
-# login.py
-
-# valid_username = "user123"
-# valid_password = "pass123"
-
 def loginmenu():
     print("--------------------------------------------------------------")
     print('        \033[4mWelcome to the Restaurant Management Interface\033[0m')
@@ -32,6 +27,9 @@ def loginmenu():
         
 
 def login():
+    print("--------------------------------------------------------------")
+    print('                          \033[4mLogin\033[0m')
+    print("--------------------------------------------------------------")
     # Get username and password
     username = inquirer.text(
         message="Enter Username/Email:",
@@ -80,6 +78,10 @@ def login():
     return False, None
 
 def signup():
+
+    print("--------------------------------------------------------------")
+    print('                         \033[4mSign Up\033[0m')
+    print("--------------------------------------------------------------")
 
     first_name = inquirer.text(
         message="Enter First Name:",
