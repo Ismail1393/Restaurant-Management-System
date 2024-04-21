@@ -31,13 +31,16 @@ def main():
                             print("Welcome Employee")
                             while True:
                                 clear_screen()
+                                print("--------------------------------------------------------------")
+                                print('                 \033[4mEmployee Interface\033[0m')
+                                print("--------------------------------------------------------------")
                                 action = inquirer.select(
                                     message="Select an action:",
                                     choices=[
                                         {"name": "View Reservations", "value": "view_reservations"},
                                         {"name": "View Orders", "value": "view_orders"},
                                         {"name": "View Menu", "value": "view_menu"},
-                                        {"name": "Insert New Order", "value": "insert_order"},
+                                        {"name": "Place New Order", "value": "insert_order"},
                                         {"name": "Exit", "value": "exit"},
                                     ],
                                     default="View Reservations"
