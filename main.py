@@ -177,20 +177,19 @@ def main():
                                             {"name": "Add New Menu Item", "value": "add_item"},
                                             {"name": "Back", "value": "back"},
                                         ],
-                                        default="View Inventory"
+                                        default=None
                                     ).execute()
 
                                     if inventory_action == "view_inventory":
-                                        clear_screen()
                                         view_inventory()
                                     elif inventory_action == "order_more":
                                         clear_screen()
-                                        order_more()  # Placeholder for future functionality
+                                        order_more() 
                                     elif inventory_action == "add_item":
                                         clear_screen()
                                         add_new_item() 
                                     elif inventory_action == "back":
-                                        continue
+                                        return
 
                                 elif action == "exit":
                                     exit_flag = True  # Set the flag to True

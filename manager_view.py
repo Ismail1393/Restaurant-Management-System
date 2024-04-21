@@ -313,7 +313,6 @@ def view_inventory():
             query = "SELECT ItemName, Quantity FROM Inventory;"
             cursor.execute(query)
             inventory_items = cursor.fetchall()
-            #clear_screen()
             print("Inventory List:\n")
             for item in inventory_items:
                 print(f"Item Name: {item[0]}, Quantity: {item[1]}")
@@ -332,10 +331,9 @@ def order_more():
     if conn is not None:
         try:
             cursor = conn.cursor()
-            # Display the current inventory to the manager
+
             view_inventory()
 
-Ask for the item name
             item_name = inquirer.text(
                 message="Enter the name of the item to order more:"
             ).execute()
@@ -352,6 +350,9 @@ Ask for the item name
             cursor.execute(update_query, (additional_quantity, item_name))
             conn.commit()
             print(f"Inventory updated. Added {additional_quantity} more units to {item_name}.")
+            query = "CALL ToggleAvailability(%s);"
+            cursor.execute(query, (item_name,))
+            conn.commit()
 
         except errors.ProgrammingError as e:
             print(f"Error: {e}")
@@ -382,10 +383,12 @@ def add_new_item():
             if add_to_menu:
                 item_description = inquirer.text(message="Enter Item Description:").execute()
                 item_price = inquirer.text(message="Enter Item Price:").execute()
-                available = inquirer.confirm(message="Is the item available?", default=True).execute()
 
-                insert_query = "INSERT INTO Menu (ItemName, ItemDescription, ItemPrice, Available) VALUES (%s, %s, %s, %s);"
-                cursor.execute(insert_query, (item_name, item_description, item_price, available))
+                insert_query = "INSERT INTO Menu (ItemName, ItemDescription, ItemPrice) VALUES (%s, %s, %s);"
+                cursor.execute(insert_query, (item_name, item_description, item_price))
+                conn.commit()
+                query = "CALL ToggleAvailability(%s);"
+                cursor.execute(query, (item_name,))
                 conn.commit()
                 print("New menu item added successfully.")
 
