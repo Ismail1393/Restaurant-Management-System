@@ -3,7 +3,7 @@ import bcrypt
 from login_file import loginmenu
 from dbconnect import create_connection
 from employee_view import check_reservations, view_orders, view_menu, insert_order
-from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value, view_employees, check_performance, toggle_employee, view_inventory
+from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value, view_employees, check_performance, toggle_employee, view_inventory, order_more
 from mysql.connector import errors
 from InquirerPy import inquirer
 from InquirerPy.validator import PasswordValidator
@@ -184,7 +184,7 @@ def main():
                                         view_inventory()
                                     elif inventory_action == "order_more":
                                         clear_screen()
-                                        #order_more()  # Placeholder for future functionality
+                                        order_more()  # Placeholder for future functionality
                                     elif inventory_action == "back":
                                         continue
 
