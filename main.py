@@ -1,10 +1,10 @@
 import os
+import bcrypt
 from login_file import loginmenu
 from dbconnect import create_connection
 from employee_view import check_reservations, view_orders, view_menu, insert_order
-from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value  # Ensure manager_view is correctly implemented
+from manager_view import update_item_price, insert_menu_item, delete_menu_item, view_sales, average_order_value, view_employees, check_performance, toggle_employee  
 from mysql.connector import errors
-import bcrypt
 from InquirerPy import inquirer
 from InquirerPy.validator import PasswordValidator
 
@@ -28,7 +28,9 @@ def main():
                         permission = cursor.fetchone()
                         if permission:
                             if permission[0] == 2:  # Employee
-                                print("Welcome Employee")
+                                print("--------------------------------------------------------------")
+                                print('        \033[4mEmployee Interface\033[0m')
+                                print("--------------------------------------------------------------")
                                 while True:
                                     clear_screen()
                                     action = inquirer.select(
@@ -61,10 +63,13 @@ def main():
                             elif permission[0] == 1:  # Manager
                                 while True:
                                     clear_screen()
-                                    print("Welcome Manager")
+                                    print("--------------------------------------------------------------")
+                                    print('                 \033[4mManager Interface\033[0m')
+                                    print("--------------------------------------------------------------")
                                     action = inquirer.select(
                                         message="Select an action:",
                                         choices=[
+                                            {"name": "Employees", "value": "employees"},
                                             {"name": "Edit Menu", "value": "edit_menu"},
                                             {"name": "View Sales", "value": "view_sales"},
                                             {"name": "Exit", "value": "exit"},
@@ -94,7 +99,33 @@ def main():
                                             clear_screen()
                                             delete_menu_item()
                                         elif sub_action == "back":
-                                            continue
+                                            return  
+                                    elif action == "employees":
+                                        clear_screen()
+                                        print("--------------------------------------------------------------")
+                                        print('                 \033[4mEmployee Information\033[0m')
+                                        print("--------------------------------------------------------------")
+                                        employees_action = inquirer.select(
+                                            message="Select Option:",
+                                            choices=[
+                                                {"name": "View All Employees", "value": "view_employees"},
+                                                {"name": "Edit Employee Information", "value": "toggle_employee"},
+                                                {"name": "Check Employee Performance", "value": "check_performance"},
+                                                {"name": "Exit", "value": "exit"},
+                                            ],
+                                            default=None
+                                        ).execute()
+
+                                        if employees_action == "view_employees":
+                                            view_employees()
+                                        elif employees_action == "check_performance":
+                                            check_performance()
+                                        elif employees_action == "toggle_employee":
+                                            toggle_employee()
+                                        elif employees_action == "exit":
+                                            return
+                                    
+
 
                                     elif action == "view_sales":
                                         clear_screen()
@@ -121,7 +152,7 @@ def main():
                                         return
 
                         else:
-                            print("User has no permission level assigned")
+                            print("User has no permission level assigned -- Please Contact Your Manager")
                             return False
 
                     except errors.ProgrammingError as e:

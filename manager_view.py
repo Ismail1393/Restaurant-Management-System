@@ -94,24 +94,37 @@ def view_menu():
         print("Failed to connect to the database.")
 
 def view_sales():
-    conn = create_connection()
-    if conn is not None:
-        try:
-            cursor = conn.cursor()
-            query = "SELECT OrderDate, SUM(TotalPrice) FROM Orders WHERE OrderDate = CURDATE() GROUP BY OrderDate;"
-            cursor.execute(query)
-            result = cursor.fetchone()
-            if result:
-                print(f"Total sales for today ({result[0]}): ${result[1]:.2f}")
-            else:
-                print("No sales recorded for today.")
-        except errors.ProgrammingError as e:
-            print(f"Error: {e}")
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        print("Failed to connect to the database.")
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                query = "SELECT OrderDate, SUM(TotalPrice) FROM Orders WHERE OrderDate = CURDATE() GROUP BY OrderDate;"
+                cursor.execute(query)
+                results = cursor.fetchall()
+                if results:
+                    for result in results:
+                        print(f"Total sales for {result[0]}: ${result[1]:.2f}")
+                else:
+                    print("No sales recorded for today.")
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
+
+        action = inquirer.select(
+            message="Select an action:",
+            choices=[
+                {"name": "Exit", "value": "exit"},
+            ],
+            default="Exit"
+        ).execute()
+
+        if action == "exit":
+            break
 
 def average_order_value():
     conn = create_connection()
@@ -133,3 +146,139 @@ def average_order_value():
     else:
         print("Failed to connect to the database.")
 
+def view_employees():
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                query = "SELECT * FROM users WHERE permission_level = 2;"
+                cursor.execute(query)
+                employees = cursor.fetchall()
+                for employee in employees:
+                    print("Employee ID:", employee[0])
+                    print("Name:", employee[1], employee[2])
+                    print("Email:", employee[3])
+                    print("Permission Level:", employee[6])
+                    print("------------------------------------------")
+
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
+        
+        action = inquirer.select(
+            message="Select an action:",
+            choices=[
+                {"name": "Exit", "value": "exit"},
+            ],
+            default="Exit"
+        ).execute()
+
+        if action == "exit":
+            break
+
+def check_performance():
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                query = "SELECT EmployeeID, SUM(TotalPrice) FROM Orders WHERE OrderDate = CURDATE() GROUP BY EmployeeID;"
+                cursor.execute(query)
+                result = cursor.fetchall()
+                if result:
+                    for employee in result:
+                        print(f"Employee ID: {employee[0]} - Total sales: ${employee[1]:.2f}")
+                else:
+                    print("No sales recorded for today.")
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
+        
+        action = inquirer.select(
+            message="Select an action:",
+            choices=[
+                {"name": "Exit", "value": "exit"},
+            ],
+            default="Exit"
+        ).execute()
+
+        if action == "exit":
+            break
+
+def toggle_employee():
+    os.system("cls")
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                
+                query = "SELECT * FROM users;"
+                cursor.execute(query)
+                employees = cursor.fetchall()
+                for employee in employees:
+                    print("Employee ID:", employee[0])
+                    print("Name:", employee[1], employee[2])
+                    print("Email:", employee[3])
+                    print("Permission Level:", employee[6])
+                    print("------------------------------------------")
+
+                action = inquirer.select(
+                    message="Select an action:",
+                    choices=[
+                        
+                        {"name": "Update Employee Information", "value": "update_employee"},
+                        {"name": "Exit", "value": "exit"}
+                    ],
+                    default="Exit"
+                ).execute()
+
+                if action == "exit":
+                    break
+                elif action == "update_employee":
+                    employee_id = inquirer.text(message="Enter Employee ID to update:").execute()
+                    query = "SELECT * FROM users WHERE UserID = %s;"
+                    cursor.execute(query, (employee_id,))
+                    Information = cursor.fetchall()
+                    os.system("cls")
+                    print("Employee ID:", Information[0][0])
+                    print("Name:", Information[0][1], Information[0][2])
+                    print("Email:", Information[0][3])
+                    print("Permission Level:", Information[0][6])
+                    print("------------------------------------------")
+
+                    new_fname = inquirer.text(message="Enter new name:").execute()
+                    new_lname = inquirer.text(message="Enter new name:").execute()
+                    new_email = inquirer.text(message="Enter new email:").execute()
+                    new_permission = inquirer.select(
+                        message="Select new permission level:",
+                        choices=[
+                            {"name": "Employee", "value": 2},
+                            {"name": "Manager", "value": 1},
+                        ]
+                    ).execute()
+
+                    update_query = "UPDATE users SET fname = %s,lname = %s, email = %s, permission_level = %s WHERE UserID = %s;"
+                    cursor.execute(update_query, (new_fname, new_lname,  new_email, new_permission, employee_id))
+                    conn.commit()
+                    print("Employee information updated successfully.")
+
+
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
+    
+        
