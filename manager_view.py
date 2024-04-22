@@ -223,10 +223,17 @@ def check_performance():
                     query = "SELECT u.fname, u.lname, SUM(o.TotalPrice) FROM Orders o INNER JOIN Users u ON o.EmployeeID = u.userID WHERE o.EmployeeID = %s;"
                     cursor.execute(query, (employee_id,))
                     result = cursor.fetchone()
+
+                    rating = "SELECT AverageRating, NumberofRatings FROM employeeratings WHERE userID = %s;"
+                    cursor.execute(rating, (employee_id,))
+                    value = cursor.fetchone()
+
                     if result[0] is not None:
                         print(f"First Name: {result[0]}")
                         print(f"Last Name: {result[1]}")
                         print(f"Total sales for today: ${result[2]} ")
+                        print(f"Average Rating: {value[0]}")
+                        print(f"Number of Ratings: {value[1]}")
                     else:
                         print(f"No sales recorded for {employee_id}.")
 
