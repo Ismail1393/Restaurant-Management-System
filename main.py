@@ -168,7 +168,6 @@ def main():
                                             break
 
                                 elif action == "inventory":
-                                    clear_screen()
                                     inventory_action = inquirer.select(
                                         message="Inventory Options:",
                                         choices=[

@@ -306,24 +306,36 @@ def toggle_employee():
             print("Failed to connect to the database.")
     
 def view_inventory():
-    conn = create_connection()
-    if conn is not None:
-        try:
-            cursor = conn.cursor()
-            query = "SELECT ItemName, Quantity FROM Inventory;"
-            cursor.execute(query)
-            inventory_items = cursor.fetchall()
-            print("Inventory List:\n")
-            for item in inventory_items:
-                print(f"Item Name: {item[0]}, Quantity: {item[1]}")
-            print("\nEnd of Inventory List")
-        except errors.ProgrammingError as e:
-            print(f"Error: {e}")
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        print("Failed to connect to the database.")
+
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                query = "SELECT ItemName, Quantity FROM Inventory;"
+                cursor.execute(query)
+                inventory_items = cursor.fetchall()
+                print("Inventory List:\n")
+                for item in inventory_items:
+                    print(f"Item Name: {item[0]}, Quantity: {item[1]}")
+                print("\nEnd of Inventory List")
+
+                action = inquirer.select(
+                    message="Select an action:",
+                    choices=[
+                        {"name": "Exit", "value": "exit"},
+                    ],
+                )
+
+                if action == "exit":
+                    break
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
 
 
 def order_more():
@@ -361,7 +373,6 @@ def order_more():
             conn.close()
     else:
         print("Failed to connect to the database.")
-
 
 def add_new_item():
     os.system("cls")

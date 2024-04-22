@@ -174,14 +174,19 @@ def insert_order(employee_id):
                         print("Invalid item ID. Please try again.")
 
             # Calculate total price based on the prices of items fetched from the menu table
-            total_price = sum(order_items)
+                    total_price = sum(order_items)
 
-            # Insert order into Orders table with EmployeeID
-            insert_query = "INSERT INTO Orders (OrderDate, TotalPrice, EmployeeID, Quantity) VALUES (CURDATE(), %s, %s, %s);"
-            cursor.execute(insert_query, (total_price, employee_id, len(order_items)))
-            conn.commit()
+                    # Insert order into Orders table with EmployeeID
+                    insert_query = "INSERT INTO Orders (OrderDate, TotalPrice, EmployeeID, Quantity) VALUES (CURDATE(), %s, %s, %s);"
+                    cursor.execute(insert_query, (total_price, employee_id, len(order_items)))
+                    conn.commit()
 
-            print("Order inserted successfully.")
+                    query = "CALL decrement_inventory(%s, %s);"
+                    values = (item_id, len(order_items))
+                    cursor.execute(query, values)
+                    conn.commit()
+                    
+                    print("Order inserted successfully.")
 
         except errors.ProgrammingError as e:
             print(f"Error: {e}")
