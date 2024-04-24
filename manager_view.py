@@ -24,27 +24,41 @@ def update_item_price():
     else:
         print("Failed to connect to the database.")
 
-def insert_menu_item():
+from mysql.connector import errors
+
+def update_item_price():
     conn = create_connection()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            item_name = inquirer.text(message="Enter Item Name:").execute()
-            item_description = inquirer.text(message="Enter Item Description:").execute()
-            item_price = inquirer.text(message="Enter Item Price:").execute()
-            available = inquirer.confirm(message="Is the item available?", default=True).execute()
+            view_menu()  # Display menu to choose an item to update
             
-            insert_query = "INSERT INTO Menu (ItemName, ItemDescription, ItemPrice, Available) VALUES (%s, %s, %s, %s);"
-            cursor.execute(insert_query, (item_name, item_description, item_price, available))
+            item_id = inquirer.text(message="Enter Item ID to update price:").execute()
+            new_price = inquirer.text(message="Enter new price:").execute()
+            
+            # Convert new_price to a float to handle possible conversion issues before the database
+            new_price = float(new_price)
+            
+            update_query = "UPDATE Menu SET ItemPrice = %s WHERE ItemID = %s;"
+            cursor.execute(update_query, (new_price, item_id))
             conn.commit()
-            print("New menu item added successfully.")
-        except errors.ProgrammingError as e:
-            print(f"Error: {e}")
+            print("Item price updated successfully.")
+        
+        except errors.DataError as e:
+            # This catches data-related errors including those thrown by the trigger
+            print(f"Data error: {e}")
+        except errors.DatabaseError as e:
+            # This catches broader database errors
+            print(f"Database error: {e}")
+        except ValueError:
+            # This catches issues converting price to a float
+            print("Invalid input for price. Please ensure you enter a numeric value.")
         finally:
             cursor.close()
             conn.close()
     else:
         print("Failed to connect to the database.")
+
 
 def delete_menu_item():
     conn = create_connection()
