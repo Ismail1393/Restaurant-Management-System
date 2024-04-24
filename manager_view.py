@@ -3,19 +3,20 @@ from InquirerPy import inquirer
 from dbconnect import create_connection
 from mysql.connector import errors
 
-def update_item_price():
+def insert_menu_item():
     conn = create_connection()
     if conn is not None:
         try:
             cursor = conn.cursor()
-            view_menu()  # Assuming view_menu function is imported or defined in this module
-            item_id = inquirer.text(message="Enter Item ID to update price:").execute()
-            new_price = inquirer.text(message="Enter new price:").execute()
+            item_name = inquirer.text(message="Enter Item Name:").execute()
+            item_description = inquirer.text(message="Enter Item Description:").execute()
+            item_price = inquirer.text(message="Enter Item Price:").execute()
+            available = inquirer.confirm(message="Is the item available?", default=True).execute()
             
-            update_query = "UPDATE Menu SET ItemPrice = %s WHERE ItemID = %s;"
-            cursor.execute(update_query, (new_price, item_id))
+            insert_query = "INSERT INTO Menu (ItemName, ItemDescription, ItemPrice, Available) VALUES (%s, %s, %s, %s);"
+            cursor.execute(insert_query, (item_name, item_description, item_price, available))
             conn.commit()
-            print("Item price updated successfully.")
+            print("New menu item added successfully.")
         except errors.ProgrammingError as e:
             print(f"Error: {e}")
         finally:
@@ -24,7 +25,7 @@ def update_item_price():
     else:
         print("Failed to connect to the database.")
 
-from mysql.connector import errors
+
 
 def update_item_price():
     conn = create_connection()
