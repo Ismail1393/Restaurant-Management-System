@@ -168,27 +168,29 @@ def main():
                                             break
 
                                 elif action == "inventory":
-                                    inventory_action = inquirer.select(
-                                        message="Inventory Options:",
-                                        choices=[
-                                            {"name": "View Total Number of Items", "value": "view_inventory"},
-                                            {"name": "Order More", "value": "order_more"},
-                                            {"name": "Add New Menu Item", "value": "add_item"},
-                                            {"name": "Back", "value": "back"},
-                                        ],
-                                        default=None
-                                    ).execute()
+                                    while True:
+                                        inventory_action = inquirer.select(
+                                            message="Inventory Options:",
+                                            choices=[
+                                                {"name": "View Total Number of Items", "value": "view_inventory"},
+                                                {"name": "Order More", "value": "order_more"},
+                                                {"name": "Add New Menu Item", "value": "add_item"},
+                                                {"name": "Back", "value": "back"},
+                                            ],
+                                            default=None
+                                        ).execute()
 
-                                    if inventory_action == "view_inventory":
-                                        view_inventory()
-                                    elif inventory_action == "order_more":
-                                        clear_screen()
-                                        order_more() 
-                                    elif inventory_action == "add_item":
-                                        clear_screen()
-                                        add_new_item() 
-                                    elif inventory_action == "back":
-                                        return
+                                        if inventory_action == "view_inventory":
+                                            clear_screen()
+                                            view_inventory()
+                                        elif inventory_action == "order_more":
+                                            clear_screen()
+                                            order_more() 
+                                        elif inventory_action == "add_item":
+                                            clear_screen()
+                                            add_new_item() 
+                                        elif inventory_action == "back":
+                                            return
 
                                 elif action == "exit":
                                     exit_flag = True  # Set the flag to True

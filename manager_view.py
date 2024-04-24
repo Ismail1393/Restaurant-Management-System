@@ -328,7 +328,7 @@ def toggle_employee():
             print("Failed to connect to the database.")
     
 def view_inventory():
-
+    print("Inventory List:\n")
     while True:
         conn = create_connection()
         if conn is not None:
@@ -347,7 +347,7 @@ def view_inventory():
                     choices=[
                         {"name": "Exit", "value": "exit"},
                     ],
-                )
+                ).execute()
 
                 if action == "exit":
                     break
@@ -366,7 +366,13 @@ def order_more():
         try:
             cursor = conn.cursor()
 
-            view_inventory()
+            query = "SELECT ItemName, Quantity FROM Inventory;"
+            cursor.execute(query)
+            inventory_items = cursor.fetchall()
+            print("Inventory List:\n")
+            for item in inventory_items:
+                print(f"Item Name: {item[0]}, Quantity: {item[1]}")
+            
 
             item_name = inquirer.text(
                 message="Enter the name of the item to order more:"
