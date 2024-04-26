@@ -140,24 +140,36 @@ def view_sales():
             break
 
 def average_order_value():
-    conn = create_connection()
-    if conn is not None:
-        try:
-            cursor = conn.cursor()
-            query = "SELECT AVG(TotalPrice) FROM Orders WHERE OrderDate = CURDATE();"
-            cursor.execute(query)
-            result = cursor.fetchone()
-            if result[0] is not None:
-                print(f"Average order value for today: ${result[0]:.2f}")
-            else:
-                print("No orders have been placed today.")
-        except errors.ProgrammingError as e:
-            print(f"Error: {e}")
-        finally:
-            cursor.close()
-            conn.close()
-    else:
-        print("Failed to connect to the database.")
+    while True:
+        conn = create_connection()
+        if conn is not None:
+            try:
+                cursor = conn.cursor()
+                query = "SELECT AVG(TotalPrice) FROM Orders WHERE OrderDate = CURDATE();"
+                cursor.execute(query)
+                result = cursor.fetchone()
+                if result[0] is not None:
+                    print(f"Average order value for today: ${result[0]:.2f}")
+                else:
+                    print("No orders have been placed today.")
+
+                action = inquirer.select(
+                    message="Select an action:",
+                    choices=[
+                        {"name": "Exit", "value": "exit"},
+                    ],
+                    default="Exit"
+                ).execute()
+
+                if action == "exit":
+                    break
+            except errors.ProgrammingError as e:
+                print(f"Error: {e}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            print("Failed to connect to the database.")
 
 def view_employees():
     while True:
@@ -222,9 +234,9 @@ def check_performance():
                     result = cursor.fetchall()
                     if result:
                         for employee in result:
-                            print(f"Employee ID: {employee[0]}")
+                            print(f"Employee ID: {employee[2]}")
                             print(f"First Name: {employee[1]}")
-                            print(f"Last Name: {employee[2]}")
+                            print(f"Last Name: {employee[0]}")
                             print(f"Total sales: ${employee[3]:.2f}")
                             print("------------------------------------------")
                     else:

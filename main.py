@@ -97,53 +97,55 @@ def main():
                                 ).execute()
 
                                 if action == "edit_menu":
-                                    sub_action = inquirer.select(
-                                        message="Edit Menu Options:",
-                                        choices=[
-                                            {"name": "Update Item Price", "value": "update_price"},
-                                            {"name": "Insert New Menu Item", "value": "insert_item"},
-                                            {"name": "Delete Menu Item", "value": "delete_item"},
-                                            {"name": "Back", "value": "back"},
-                                        ],
-                                        default="Update Item Price"
-                                    ).execute()
+                                    while True:
+                                        sub_action = inquirer.select(
+                                            message="Edit Menu Options:",
+                                            choices=[
+                                                {"name": "Update Item Price", "value": "update_price"},
+                                                {"name": "Insert New Menu Item", "value": "insert_item"},
+                                                {"name": "Delete Menu Item", "value": "delete_item"},
+                                                {"name": "Back", "value": "back"},
+                                            ],
+                                            default="Update Item Price"
+                                        ).execute()
 
-                                    if sub_action == "update_price":
-                                        clear_screen()
-                                        update_item_price()
-                                    elif sub_action == "insert_item":
-                                        clear_screen()
-                                        insert_menu_item()
-                                    elif sub_action == "delete_item":
-                                        clear_screen()
-                                        delete_menu_item()
-                                    elif sub_action == "back":
-                                        break  # Break out of the inner loop
+                                        if sub_action == "update_price":
+                                            clear_screen()
+                                            update_item_price()
+                                        elif sub_action == "insert_item":
+                                            clear_screen()
+                                            insert_menu_item()
+                                        elif sub_action == "delete_item":
+                                            clear_screen()
+                                            delete_menu_item()
+                                        elif sub_action == "back":
+                                            break  # Break out of the inner loop
                                 elif action == "employees":
-                                    clear_screen()
-                                    print("--------------------------------------------------------------")
-                                    print('                 \033[4mEmployee Information\033[0m')
-                                    print("--------------------------------------------------------------")
-                                    employees_action = inquirer.select(
-                                        message="Select Option:",
-                                        choices=[
-                                            {"name": "View All Employees", "value": "view_employees"},
-                                            {"name": "Edit Employee Information", "value": "toggle_employee"},
-                                            {"name": "Check Employee Performance", "value": "check_performance"},
-                                            {"name": "Exit", "value": "exit"},
-                                        ],
-                                        default=None
-                                    ).execute()
+                                    while True:
+                                        clear_screen()
+                                        print("--------------------------------------------------------------")
+                                        print('                 \033[4mEmployee Information\033[0m')
+                                        print("--------------------------------------------------------------")
+                                        employees_action = inquirer.select(
+                                            message="Select Option:",
+                                            choices=[
+                                                {"name": "View All Employees", "value": "view_employees"},
+                                                {"name": "Edit Employee Information", "value": "toggle_employee"},
+                                                {"name": "Check Employee Performance", "value": "check_performance"},
+                                                {"name": "Exit", "value": "exit"},
+                                            ],
+                                            default=None
+                                        ).execute()
 
-                                    if employees_action == "view_employees":
-                                        view_employees()
-                                    elif employees_action == "check_performance":
-                                        check_performance()
-                                    elif employees_action == "toggle_employee":
-                                        toggle_employee()
-                                    elif employees_action == "exit":
-                                        exit_flag = True  # Set the flag to True
-                                        break  # Break out of the inner loop
+                                        if employees_action == "view_employees":
+                                            view_employees()
+                                        elif employees_action == "check_performance":
+                                            check_performance()
+                                        elif employees_action == "toggle_employee":
+                                            toggle_employee()
+                                        elif employees_action == "exit":
+                                            exit_flag = True  # Set the flag to True
+                                            break  # Break out of the inner loop
                                 
                                 elif action == "view_sales":
                                     while True:
@@ -153,7 +155,7 @@ def main():
                                             choices=[
                                                 {"name": "View Sales for Today", "value": "view_today_sales"},
                                                 {"name": "Average Order Value Today", "value": "avg_order_value"},
-                                                {"name": "Back", "value": "back"},
+                                                {"name": "Exit", "value": "back"},
                                             ],
                                             default="View Sales for Today"
                                         ).execute()
@@ -175,7 +177,7 @@ def main():
                                                 {"name": "View Total Number of Items", "value": "view_inventory"},
                                                 {"name": "Order More", "value": "order_more"},
                                                 {"name": "Add New Menu Item", "value": "add_item"},
-                                                {"name": "Back", "value": "back"},
+                                                {"name": "Exit", "value": "back"},
                                             ],
                                             default=None
                                         ).execute()
@@ -190,7 +192,7 @@ def main():
                                             clear_screen()
                                             add_new_item() 
                                         elif inventory_action == "back":
-                                            return
+                                            break
 
                                 elif action == "exit":
                                     exit_flag = True  # Set the flag to True
